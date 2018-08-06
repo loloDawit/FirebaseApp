@@ -1,0 +1,7 @@
+{
+  "name": "getConnected",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}
