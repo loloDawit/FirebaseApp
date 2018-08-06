@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header hidden>
   <ion-navbar color="danger">
     <ion-title>
       Get Connected
@@ -17,17 +17,23 @@
   </ion-item>
 
   <ion-grid style="width: 75%;">
+    <!-- email row -->
     <ion-row class="rowstyle">
       <ion-icon name="mail" color="danger"></ion-icon>
       <ion-input type="email" placeholder="your email"></ion-input>
     </ion-row>
+    <!-- password row -->
     <ion-row class="rowstyle">
-        <ion-icon name="key" color="danger"></ion-icon>
+      <ion-icon name="key" color="danger"></ion-icon>
       <ion-input type="password" placeholder="your password"></ion-input>
     </ion-row>
-
+    <!-- button row -->
     <ion-row>
       <button ion-button block round outline color="light" class="btnstyle">Login</button>
     </ion-row>
   </ion-grid>
+  <!-- button row -->
+  <ion-row>
+    <button ion-button block round clear color="light" class="btnstyle">Don't have an account? Sign Up</button>
+  </ion-row>
 </ion-content>
