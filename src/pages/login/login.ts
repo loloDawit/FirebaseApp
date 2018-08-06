@@ -12,8 +12,8 @@ export class LoginPage {
 
   }
 
-  // signup
-  signUp(){
+  // reroute to the signup
+  signUpPage(){
     this.navCtrl.push(SignupPage);
   }
 
