@@ -19,7 +19,7 @@ export class FeedPage {
   postUpdate(){
     firebase.firestore().collection("posts").add({
       text: this.text,
-      created: firebase.firestore.FieldValue.serverTimestamp,
+      created: firebase.firestore.FieldValue.serverTimestamp(),
       owner: firebase.auth().currentUser.uid,
       owner_name:firebase.auth().currentUser.displayName
     }).then((doc) => {
