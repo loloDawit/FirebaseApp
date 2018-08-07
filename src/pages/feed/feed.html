@@ -20,8 +20,8 @@
 
     <ion-input type="text" placeholder="Say something..." [(ngModel)]="text"></ion-input>
 
-    <button ion-button icon-only color="danger" clear>
-      <ion-icon name="send" (click)="postUpdate()"></ion-icon>
+    <button ion-button icon-only color="danger" clear (click)="postUpdate()">
+      <ion-icon name="send" ></ion-icon>
     </button>
   </ion-row>
 
