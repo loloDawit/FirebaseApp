@@ -1,18 +1,61 @@
-<!--
-  Generated template for the FeedPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>feed</ion-title>
+  <ion-navbar color="danger">
+    <ion-title>Your Feed</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only clear>
+        <ion-icon name="log-out"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
+  <ion-row margin class="rowStyle">
+    <button ion-button icon-only color="danger" clear>
+      <ion-icon name="images"></ion-icon>
+    </button>
+
+    <ion-input type="text" placeholder="Say something..." [(ngModel)]="text"></ion-input>
+
+    <button ion-button icon-only color="danger" clear>
+      <ion-icon name="send" (click)="postUpdate()"></ion-icon>
+    </button>
+  </ion-row>
+
+  <ion-card>
+    <ion-item-divider color="danger">
+      Dawit Says
+    </ion-item-divider>
+
+    <ion-item text-wrap>
+      Dawit abera is building new app using firebase and realtime database  
+
+    </ion-item>
+
+    <ion-row class="bottom-bar" >
+      <ion-col>
+        <button ion-button icon-left clear small color="danger" class="border-right">
+          <ion-icon name="thumbs-up">
+            <small>12 Likes</small>
+          </ion-icon>
+        </button>
+
+      </ion-col>
+      <button ion-button icon-left clear small color="danger" class="border-right">
+        <ion-icon name="text">
+          <small>12 Comments</small>
+        </ion-icon>
+      </button>
+
+      <ion-col>
+        <button ion-button icon-left clear small color="danger">
+          <small> 12 mins ago </small>
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-card>
 
 </ion-content>
