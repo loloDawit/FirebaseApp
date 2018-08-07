@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
 import firebase from 'firebase';
+import { LoginPage } from '../login/login';
 
 @Component({
   selector: 'page-feed',
@@ -29,6 +30,9 @@ export class FeedPage {
       console.log(err);
       
     })
+  }
+  logOut(){
+    this.navCtrl.push(LoginPage);
   }
 
 }
