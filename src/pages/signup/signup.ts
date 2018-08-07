@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController, AlertController} from 'ionic-angular';
 import firebase from 'firebase';
+import { FeedPage } from '../feed/feed';
 
 
 @Component({
@@ -44,6 +45,7 @@ export class SignupPage {
               text: "Ok",
               handler: () =>{
                 // Navigate to new page
+                this.navCtrl.setRoot(FeedPage);
               }
             }
           ]
@@ -64,7 +66,7 @@ export class SignupPage {
       
     })
     console.log(this.email + this.name + this.password);
-    //this.clear();
+    this.clear();
   }
   clear(){
     this.name="";
