@@ -25,9 +25,9 @@
     </button>
   </ion-row>
 
-  <ion-card>
+  <ion-card *ngFor="let post of posts">
     <ion-item-divider color="danger">
-      Dawit Says
+      {{post.data().owner_name}} Says
     </ion-item-divider>
 
     <ion-item text-wrap>

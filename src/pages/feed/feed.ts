@@ -10,8 +10,26 @@ import { LoginPage } from '../login/login';
 })
 export class FeedPage {
   text:string="";
+  posts: any[] = [];
+
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
+    this.getPosts();
+  }
+  //get posts from the cloud
+  getPosts(){
+    firebase.firestore().collection("posts").get()
+    .then((data) =>{
+
+      data.forEach((document) => {
+        this.posts.push(document);
+      })
+      console.log(this.posts);
+      
+    }).catch((err) =>{
+      console.log(err);
+      
+    });
   }
 
   ionViewDidLoad() {
