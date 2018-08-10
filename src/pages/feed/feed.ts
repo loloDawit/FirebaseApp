@@ -91,6 +91,12 @@ export class FeedPage {
       })
       .then(doc => {
         console.log(doc);
+        this.text = "";
+        let toast = this.toastCtrl.create({
+          message: "Your post has been created successfully.",
+          duration: 4000 
+        }).present();
+
         this.getPosts();
       })
 
@@ -99,7 +105,9 @@ export class FeedPage {
       });
   }
   logOut() {
-    this.navCtrl.push(LoginPage);
+    firebase.auth().signOut().then(() =>{
+      this.navCtrl.setRoot(LoginPage);
+    })
   }
 
   timeStamp(time) {
