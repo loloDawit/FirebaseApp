@@ -4,6 +4,9 @@ import { NavController, NavParams } from 'ionic-angular';
 import firebase from 'firebase';
 import { LoginPage } from '../login/login';
 
+import moment from 'moment';
+
+
 @Component({
   selector: 'page-feed',
   templateUrl: 'feed.html',
@@ -19,8 +22,8 @@ export class FeedPage {
   //get posts from the cloud
   getPosts(){
     this.posts = []
-    firebase.firestore().collection("posts").get()
-    .then((data) =>{
+    firebase.firestore().collection("posts").orderBy("created","desc").get()
+    .then((data) =>{  // re-arrange posts by descending order
 
       data.forEach((document) => {
         this.posts.push(document);
@@ -52,6 +55,12 @@ export class FeedPage {
   }
   logOut(){
     this.navCtrl.push(LoginPage);
+  }
+
+  timeStamp(time){
+    let timeDiff = moment(time).diff(moment());
+    return moment.duration(timeDiff).humanize();
+
   }
 
 }

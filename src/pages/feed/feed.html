@@ -52,7 +52,7 @@
 
       <ion-col>
         <button ion-button icon-left clear small color="danger">
-          <small> 12 mins ago </small>
+          <small> {{timeStamp(post.data().created.toDate())}} ago </small>
         </button>
       </ion-col>
     </ion-row>
