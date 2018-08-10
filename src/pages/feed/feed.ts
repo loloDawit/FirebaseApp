@@ -1,5 +1,10 @@
 import { Component } from "@angular/core";
-import { NavController, NavParams } from "ionic-angular";
+import {
+  NavController,
+  NavParams,
+  LoadingController,
+  ToastController
+} from "ionic-angular";
 
 import firebase from "firebase";
 import { LoginPage } from "../login/login";
@@ -15,18 +20,46 @@ export class FeedPage {
   posts: any[] = [];
   pageSize: number = 5;
   cursor: any;
+  infiniteEvent: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    public loadingCtrl: LoadingController,
+    public toastCtrl: ToastController
+  ) {
     this.getPosts();
   }
   //get posts from the cloud
   getPosts() {
     this.posts = [];
-    firebase
+    let loading = this.loadingCtrl.create({
+      content: "Loading Data From Firebase ...", 
+      duration: 5000
+    });
+    loading.present();
+    let query = firebase
       .firestore()
       .collection("posts")
       .orderBy("created", "desc")
-      .limit(this.pageSize)
+      .limit(this.pageSize);
+
+    query.onSnapshot(snapshot => {
+      let dataChanges = snapshot.docChanges();
+      dataChanges.forEach(dataChange => {
+        if (dataChange.type == "added") {
+          //
+        }
+        if (dataChange.type == "modified") {
+          //
+          console.log("Doumnet ID " + dataChange.doc.id + "modified");
+        }
+        if (dataChange.type == "removed") {
+          //
+        }
+      });
+    });
+    query
       .get()
       .then(data => {
         // re-arrange posts by descending order
@@ -34,8 +67,9 @@ export class FeedPage {
         data.forEach(document => {
           this.posts.push(document);
         });
+        loading.dismiss();
         console.log(this.posts);
-        this.cursor = this.posts[this.posts.length -1];
+        this.cursor = this.posts[this.posts.length - 1];
       })
       .catch(err => {
         console.log(err);
@@ -59,7 +93,7 @@ export class FeedPage {
         console.log(doc);
         this.getPosts();
       })
-      
+
       .catch(err => {
         console.log(err);
       });
@@ -72,7 +106,15 @@ export class FeedPage {
     let timeDiff = moment(time).diff(moment());
     return moment.duration(timeDiff).humanize();
   }
-  loadMorePosts(event){
+  refresh(event) {
+    this.posts = [];
+    this.getPosts();
+    if (this.infiniteEvent) {
+      this.infiniteEvent.enable(true);
+    }
+    event.complete();
+  }
+  loadMorePosts(event) {
     firebase
       .firestore()
       .collection("posts")
@@ -87,18 +129,17 @@ export class FeedPage {
           this.posts.push(document);
         });
         console.log(this.posts);
-        if(data.size < this.pageSize){
-          //all data from firestore have been loaded 
+        if (data.size < this.pageSize) {
+          //all data from firestore have been loaded
           event.enable(false);
-        }else{
+          this.infiniteEvent = event;
+        } else {
           event.complete();
-          this.cursor = this.posts[this.posts.length -1];
-
+          this.cursor = this.posts[this.posts.length - 1];
         }
       })
       .catch(err => {
         console.log(err);
       });
-
   }
 }
