@@ -18,6 +18,7 @@ export class FeedPage {
   }
   //get posts from the cloud
   getPosts(){
+    this.posts = []
     firebase.firestore().collection("posts").get()
     .then((data) =>{
 
@@ -43,7 +44,7 @@ export class FeedPage {
       owner_name:firebase.auth().currentUser.displayName
     }).then((doc) => {
       console.log(doc);
-      
+      this.getPosts();
     }).catch((err) =>{
       console.log(err);
       
