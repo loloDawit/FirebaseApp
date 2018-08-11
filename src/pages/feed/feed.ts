@@ -229,8 +229,9 @@ export class FeedPage {
       });
   }
   /**
-   * 
+   * Upload an image to firestore
    * @param name unique id to store photo to firestore
+   * return promise to resolve async operations
    */
   uploadImage(name: string) {
     return new Promise((resolve, reject) => {
