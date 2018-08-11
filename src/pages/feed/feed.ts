@@ -23,13 +23,14 @@ export class FeedPage {
   pageSize: number = 5;
   cursor: any;
   infiniteEvent: any;
+  image: string;
   /**
-   * 
-   * @param navCtrl 
-   * @param navParams 
-   * @param loadingCtrl 
-   * @param toastCtrl 
-   * @param camera 
+   *
+   * @param navCtrl
+   * @param navParams
+   * @param loadingCtrl
+   * @param toastCtrl
+   * @param camera
    */
   constructor(
     public navCtrl: NavController,
@@ -40,7 +41,7 @@ export class FeedPage {
   ) {
     this.getPosts();
   }
-  
+
   /**
    * get posts from the cloud
    */
@@ -105,17 +106,22 @@ export class FeedPage {
         owner: firebase.auth().currentUser.uid,
         owner_name: firebase.auth().currentUser.displayName
       })
-      .then(doc => {
+      .then( doc => {
         console.log(doc);
-        this.getPosts();
+
+        if (this.image) {
+           this.uploadImage(doc.id);
+        }
+
         this.text = "";
+        this.image = undefined
         let toast = this.toastCtrl
           .create({
             message: "Your post has been created successfully.",
             duration: 4000
           })
           .present();
-
+        this.getPosts();
       })
 
       .catch(err => {
@@ -143,7 +149,7 @@ export class FeedPage {
   /**
    * Reads time captured by firebase
    * @param time current time.
-   * Function returns a human readable time 
+   * Function returns a human readable time
    */
   timeStamp(time) {
     let timeDiff = moment(time).diff(moment());
@@ -163,7 +169,7 @@ export class FeedPage {
   }
   /**
    * Load more data from firebase
-   * @param event 
+   * @param event
    */
   loadMorePosts(event) {
     firebase
@@ -214,9 +220,50 @@ export class FeedPage {
       .getPicture(imageOptions)
       .then(base64Image => {
         console.log(base64Image);
+        this.image = "data:image/png;base64," + base64Image;
       })
       .catch(err => {
         console.log(err);
       });
+  }
+  
+  uploadImage(name: string) {
+    return new Promise((resolve, reject) => {
+
+      let ref = firebase.storage().ref("postImages/" + name);
+      let uploadTask = ref.putString(this.image.split(',')[1], "base64");
+      uploadTask.on(
+        "state_changed",
+        (taskSnapshot) => {
+          console.log(taskSnapshot);
+        },
+        (err) => {
+          console.log(err);
+        },
+        () => {
+          console.log("Upload completed!!");
+          uploadTask.snapshot.ref
+            .getDownloadURL()
+            .then(url => {
+              firebase
+                .firestore()
+                .collection("posts")
+                .doc(name)
+                .update({
+                  image: url
+                })
+                .then(() => {
+                  resolve();
+                })
+                .catch(err => {
+                  reject();
+                });
+            })
+            .catch(err => {
+              reject();
+            });
+        }
+      );
+    });
   }
 }
