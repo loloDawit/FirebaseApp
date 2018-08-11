@@ -106,11 +106,11 @@ export class FeedPage {
         owner: firebase.auth().currentUser.uid,
         owner_name: firebase.auth().currentUser.displayName
       })
-      .then( doc => {
+      .then( async doc => {
         console.log(doc);
 
         if (this.image) {
-           this.uploadImage(doc.id);
+           await this.uploadImage(doc.id);
         }
 
         this.text = "";
@@ -203,7 +203,9 @@ export class FeedPage {
   addImages() {
     this.launchCamera();
   }
-
+  /**
+   * Open native camera and set camera options
+   */
   launchCamera() {
     let imageOptions: CameraOptions = {
       quality: 100,
@@ -226,16 +228,26 @@ export class FeedPage {
         console.log(err);
       });
   }
-  
+  /**
+   * 
+   * @param name unique id to store photo to firestore
+   */
   uploadImage(name: string) {
     return new Promise((resolve, reject) => {
+
+      let loading = this.loadingCtrl.create({
+        content: "Uploading photo to firestore..."
+      })
+      loading.present(); 
 
       let ref = firebase.storage().ref("postImages/" + name);
       let uploadTask = ref.putString(this.image.split(',')[1], "base64");
       uploadTask.on(
         "state_changed",
-        (taskSnapshot) => {
+        (taskSnapshot:any) => {
           console.log(taskSnapshot);
+          let calculatedPercentage = taskSnapshot.bytesTransferred / taskSnapshot.totalBytes * 100;
+          loading.setContent("Uploaded "+calculatedPercentage+" % ...")
         },
         (err) => {
           console.log(err);
@@ -253,13 +265,16 @@ export class FeedPage {
                   image: url
                 })
                 .then(() => {
+                  loading.dismiss();
                   resolve();
                 })
                 .catch(err => {
+                  loading.dismiss();
                   reject();
                 });
             })
             .catch(err => {
+              loading.dismiss();
               reject();
             });
         }
