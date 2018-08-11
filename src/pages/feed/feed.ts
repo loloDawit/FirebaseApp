@@ -6,6 +6,8 @@ import {
   ToastController
 } from "ionic-angular";
 
+import { Camera, CameraOptions } from "@ionic-native/camera";
+
 import firebase from "firebase";
 import { LoginPage } from "../login/login";
 
@@ -26,7 +28,8 @@ export class FeedPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public loadingCtrl: LoadingController,
-    public toastCtrl: ToastController
+    public toastCtrl: ToastController,
+    private camera: Camera
   ) {
     this.getPosts();
   }
@@ -34,7 +37,7 @@ export class FeedPage {
   getPosts() {
     this.posts = [];
     let loading = this.loadingCtrl.create({
-      content: "Loading Data From Firebase ...", 
+      content: "Loading Data From Firebase ...",
       duration: 5000
     });
     loading.present();
@@ -52,7 +55,7 @@ export class FeedPage {
         }
         if (dataChange.type == "modified") {
           //
-          console.log("Doumnet ID " + dataChange.doc.id + "modified");
+          console.log("Document ID " + dataChange.doc.id + "modified");
         }
         if (dataChange.type == "removed") {
           //
@@ -91,13 +94,15 @@ export class FeedPage {
       })
       .then(doc => {
         console.log(doc);
-        this.text = "";
-        let toast = this.toastCtrl.create({
-          message: "Your post has been created successfully.",
-          duration: 4000 
-        }).present();
-
         this.getPosts();
+        this.text = "";
+        let toast = this.toastCtrl
+          .create({
+            message: "Your post has been created successfully.",
+            duration: 4000
+          })
+          .present();
+
       })
 
       .catch(err => {
@@ -105,9 +110,19 @@ export class FeedPage {
       });
   }
   logOut() {
-    firebase.auth().signOut().then(() =>{
-      this.navCtrl.setRoot(LoginPage);
-    })
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        let toast = this.toastCtrl
+          .create({
+            message: "You have been logged out successfully.",
+            duration: 4000
+          })
+          .present();
+
+        this.navCtrl.setRoot(LoginPage);
+      });
   }
 
   timeStamp(time) {
@@ -145,6 +160,32 @@ export class FeedPage {
           event.complete();
           this.cursor = this.posts[this.posts.length - 1];
         }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+  //add images
+  addImages() {
+    this.launchCamera();
+  }
+
+  launchCamera() {
+    let imageOptions: CameraOptions = {
+      quality: 100,
+      sourceType: this.camera.PictureSourceType.CAMERA,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.PNG,
+      mediaType: this.camera.MediaType.PICTURE,
+      correctOrientation: true,
+      targetHeight: 512,
+      targetWidth: 512,
+      allowEdit: true
+    };
+    this.camera
+      .getPicture(imageOptions)
+      .then(base64Image => {
+        console.log(base64Image);
       })
       .catch(err => {
         console.log(err);
