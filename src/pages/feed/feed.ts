@@ -23,7 +23,14 @@ export class FeedPage {
   pageSize: number = 5;
   cursor: any;
   infiniteEvent: any;
-
+  /**
+   * 
+   * @param navCtrl 
+   * @param navParams 
+   * @param loadingCtrl 
+   * @param toastCtrl 
+   * @param camera 
+   */
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -33,7 +40,10 @@ export class FeedPage {
   ) {
     this.getPosts();
   }
-  //get posts from the cloud
+  
+  /**
+   * get posts from the cloud
+   */
   getPosts() {
     this.posts = [];
     let loading = this.loadingCtrl.create({
@@ -82,6 +92,9 @@ export class FeedPage {
   ionViewDidLoad() {
     console.log("ionViewDidLoad FeedPage");
   }
+  /**
+   * update new post by getting more data from firebase
+   */
   postUpdate() {
     firebase
       .firestore()
@@ -109,6 +122,9 @@ export class FeedPage {
         console.log(err);
       });
   }
+  /**
+   * Logout of current session.Then set root page to login page
+   */
   logOut() {
     firebase
       .auth()
@@ -124,11 +140,19 @@ export class FeedPage {
         this.navCtrl.setRoot(LoginPage);
       });
   }
-
+  /**
+   * Reads time captured by firebase
+   * @param time current time.
+   * Function returns a human readable time 
+   */
   timeStamp(time) {
     let timeDiff = moment(time).diff(moment());
     return moment.duration(timeDiff).humanize();
   }
+  /**
+   * Refresh page content. Get more data from firebase
+   * @param event current app session
+   */
   refresh(event) {
     this.posts = [];
     this.getPosts();
@@ -137,6 +161,10 @@ export class FeedPage {
     }
     event.complete();
   }
+  /**
+   * Load more data from firebase
+   * @param event 
+   */
   loadMorePosts(event) {
     firebase
       .firestore()
