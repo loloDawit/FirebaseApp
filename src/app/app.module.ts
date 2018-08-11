@@ -11,6 +11,8 @@ import { FeedPage} from '../pages/feed/feed';
 
 import firebase from 'firebase';
 
+import  { Camera } from '@ionic-native/camera'; 
+
 var config = {
   apiKey: "AIzaSyC58afan-p4uPLoQJjissGdrka5U2ejCH0",
   authDomain: "fir-app-cc115.firebaseapp.com",
@@ -44,6 +46,7 @@ firebase.firestore().settings({
   ],
   providers: [
     StatusBar,
+    Camera,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
