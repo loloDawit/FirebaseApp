@@ -6,6 +6,8 @@ import {
   ToastController
 } from "ionic-angular";
 
+import { HttpClient } from '@angular/common/http'
+
 import { Camera, CameraOptions } from "@ionic-native/camera";
 
 import firebase from "firebase";
@@ -37,7 +39,8 @@ export class FeedPage {
     public navParams: NavParams,
     public loadingCtrl: LoadingController,
     public toastCtrl: ToastController,
-    private camera: Camera
+    private camera: Camera, 
+    private http:HttpClient
   ) {
     this.getPosts();
   }
@@ -281,5 +284,29 @@ export class FeedPage {
         }
       );
     });
+  }
+  /**
+   * 
+   * @param post 
+   */
+  likePost(post){
+    // create JSON obj 
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let body = {
+      postId: post.id, 
+      userId: firebase.auth().currentUser.uid, 
+      action: post.data().likes && post.data().likes[firebase.auth().currentUser.uid] == true ? "unlike" : "like" 
+    }
+    console.log(JSON.stringify(body));
+    
+    this.http.post("https://us-central1-fir-app-cc115.cloudfunctions.net/updateLikeCount", JSON.stringify(body),{
+      responseType: 'text'
+    }).subscribe((data)=>{
+      console.log(data);
+      
+    },(err)=>{
+      console.log(err);
+      
+    })
   }
 }

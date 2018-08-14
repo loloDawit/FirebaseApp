@@ -13,6 +13,8 @@ import firebase from 'firebase';
 
 import  { Camera } from '@ionic-native/camera'; 
 
+import { HttpClientModule } from '@angular/common/http'
+
 var config = {
   apiKey: "AIzaSyC58afan-p4uPLoQJjissGdrka5U2ejCH0",
   authDomain: "fir-app-cc115.firebaseapp.com",
@@ -35,6 +37,7 @@ firebase.firestore().settings({
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
