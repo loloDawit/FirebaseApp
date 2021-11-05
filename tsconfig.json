@@ -5,7 +5,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "lib": [
-      "doom",
+      "dom",
       "es2015"
     ],
     "module": "es2015",
